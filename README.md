@@ -5,6 +5,10 @@ HTTP layer and OpenAPI documentation; SQLAlchemy handles PostgreSQL and local SQ
 Document search combines lexical matching, a small KYC vocabulary, and local embeddings.
 No LLM account, API key, GPU, or external inference service is needed.
 
+Hosted demo: **[API documentation](https://nevis-search-assignment.vercel.app/docs)**.
+Use **Authorize** with the API key supplied separately in the submission's access note.
+The demo contains only synthetic data and uses a dedicated persistent PostgreSQL database.
+
 ## Run with Docker
 
 ```sh
@@ -204,6 +208,15 @@ download it first to include those checks. PostgreSQL tests use `TEST_DATABASE_U
 an isolated test schema; they are skipped when the variable is absent. CI runs both
 real-model checks and PostgreSQL integration checks, as well as formatting and linting.
 
+Delivery verification (29 October 2026): all 29 tests passed locally, including the
+downloaded model and isolated PostgreSQL tests, with 98% statement coverage. Ruff lint and
+format checks passed. Docker image build, migrations, health, search and persistence
+after an API restart were verified. The independent code review and targeted security
+re-review found no remaining blocking issues. Hosted API checks verified authenticated
+writes, all example searches, document readback and rejection of unauthenticated access.
+GitHub Actions is configured, but the account's billing/spending-limit restriction
+prevented the workflow job from starting; there is no claimed successful CI run.
+
 ## Deployment and access
 
 The repository includes `vercel.json` and a root `main.py` for a Python deployment on
@@ -227,6 +240,10 @@ PostgreSQL; supply the same environment variables and an HTTPS endpoint.
 Send the key as `X-API-Key` on all data endpoints, or use **Authorize** in Swagger UI.
 For scripts, export `API_KEY` before running `seed_demo.py`. `/health`, `/docs` and
 `/openapi.json` expose no stored client/document data and remain public.
+
+PostgreSQL migration `0002` enables row security without public-role policies on every
+data table. The API's database role must own those tables (as it does in the hosted demo).
+This also blocks direct anonymous access through Supabase's separate Data API.
 
 The single shared key is appropriate for a reviewer sandbox, not advisor-level access
 control. This is not a multi-tenant production system. Use synthetic data only. A real
