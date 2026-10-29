@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+data/
+assets/model/
+.env
+.env.*
+!.env.example
+.vercel/
+*.egg-info/
+
+.vercel
+.env*.local

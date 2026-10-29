@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "regions": ["lhr1"],
+  "functions": {
+    "main.py": {
+      "includeFiles": "assets/model/**",
+      "maxDuration": 60
+    }
+  }
+}
